@@ -4,6 +4,8 @@
 
 <h2><%= @message.title %></h2>
 <p><%= @message.description %></p>
+<p><strong>Posted By:</strong></p>
+<p> <%= @message.user.email %> <%= time_ago_in_words(@message.created_at) %> ago.</p>
 
  <hr class="my-5">
   <div class="row">
@@ -13,13 +15,18 @@
         <small><em class="text-muted">Be the first one to comment this message</em></small>
       <% end %>
            <% @message.comments.each do |comment| %>
+           <% if user_signed_in?  %>
+              <% if @message.user_id == current_user.id %>
            <%= link_to "Delete",
                   comment_path(comment),
                   method: :delete,
                   data: { confirm: "Are you sure?" } %>
+              <% end  %>
+            <% end  %>
         <div>
           <small><em class="text-muted"><%= distance_of_time_in_words_to_now(comment.created_at) %> ago</em></small>
           <p class="mb-0"><%= comment.content %></p>
+          <p id="comment"><%= comment.user.email %></p>
         </div>
       <hr>
     <% end %>
@@ -27,13 +34,18 @@
 
   <div class="col-12 col-sm-6">
       <div class="bg-white rounded p-3">
+        <% if user_signed_in?  %>
         <h5>Add your Comment</h5>
            <%= render "comments/form", message: @message, comment: @comment   %>
       </div>
          <div class="box">
-          <%= link_to "Edit Message", edit_message_path(@message), class:"btn btn-info btn-block custom" %>
-          <%= link_to "Home", root_path, class:"btn btn-info btn-block custom" %>
-          <%= link_to "Delete", message_path(@message), method: :delete, data: { confirm: "Are you sure" }, class:"btn btn-info btn-block custom" %>
+            <%= link_to "Home", root_path, class:"btn btn-info btn-block custom" %>
+
+              <% if @message.user_id == current_user.id %>
+                <%= link_to "Edit Message", edit_message_path(@message), class:"btn btn-info btn-block custom" %>
+                <%= link_to "Delete", message_path(@message), method: :delete, data: { confirm: "Are you sure" }, class:"btn btn-info btn-block custom" %>
+              <% end  %>
+            <% end  %>
           </div>
 
 
