@@ -25,6 +25,7 @@
             <% end  %>
         <div>
           <small><em class="text-muted"><%= distance_of_time_in_words_to_now(comment.created_at) %> ago</em></small>
+          <p class="mb-0"><%= comment.rating %></p>
           <p class="mb-0"><%= comment.content %></p>
           <p id="comment"><%= comment.user.email %></p>
         </div>
